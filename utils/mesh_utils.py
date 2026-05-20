@@ -1,0 +1,1 @@
+mesh utils basically should allow some flexibility like setting the number of edges in cylinders, take care of optimization and polygon complexity, all while not breaking the material and therefore UV of the model
