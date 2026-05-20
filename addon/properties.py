@@ -1,7 +1,16 @@
 import bpy
 
+from .presets import PRESET_NAMES
+
 
 class RegistanProperties(bpy.types.PropertyGroup):
+
+    active_preset: bpy.props.EnumProperty(
+        name="Preset",
+        items=[(n, n, f"{n} style preset") for n in PRESET_NAMES],
+        default=PRESET_NAMES[0],
+        description="Architectural style preset",
+    )
 
     # --- Building base ---
     building_width: bpy.props.FloatProperty(
@@ -105,6 +114,20 @@ class RegistanProperties(bpy.types.PropertyGroup):
         default=1.6,
         min=0.5,
         max=4.0,
+    )
+
+    # --- Muqarnas ---
+    muqarnas_enabled: bpy.props.BoolProperty(
+        name="Muqarnas",
+        default=False,
+        description="Generate stalactite vault niche above arches",
+    )
+    muqarnas_tiers: bpy.props.IntProperty(
+        name="Muqarnas Tiers",
+        default=3,
+        min=1,
+        max=5,
+        description="Number of concentric muqarnas rings",
     )
 
     # --- Courtyard ---

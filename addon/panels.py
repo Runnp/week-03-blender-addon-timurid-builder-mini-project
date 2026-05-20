@@ -12,6 +12,15 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.registan
 
+        # --- Presets ---
+        box = layout.box()
+        box.label(text="Style Preset", icon="BOOKMARKS")
+        row = box.row(align=True)
+        row.prop(props, "active_preset", text="")
+        row.operator("registan.apply_preset", text="Load", icon="IMPORT")
+
+        layout.separator(factor=0.5)
+
         # --- Building ---
         box = layout.box()
         box.label(text="Building Base", icon="MESH_CUBE")
@@ -52,6 +61,12 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             col.prop(props, "arch_count")
             col.prop(props, "arch_height")
             col.prop(props, "arch_width")
+            # Muqarnas sub-toggle
+            sub = box.row()
+            sub.prop(props, "muqarnas_enabled", text="")
+            sub.label(text="Muqarnas Vault", icon="OUTLINER_OB_LATTICE")
+            if props.muqarnas_enabled:
+                box.prop(props, "muqarnas_tiers")
 
         # --- Courtyard ---
         box = layout.box()
@@ -70,6 +85,28 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             "registan.generate",
             text="Generate Building",
             icon="PLAY",
+        )
+        layout.operator(
+            "registan.apply_tiles",
+            text="Apply Tile Materials",
+            icon="MATERIAL",
+        )
+        layout.separator(factor=0.3)
+        layout.operator(
+            "registan.setup_scene",
+            text="Setup Scene",
+            icon="LIGHT_SUN",
+        )
+        layout.operator(
+            "registan.export_obj",
+            text="Export OBJ…",
+            icon="EXPORT",
+        )
+        layout.separator(factor=0.3)
+        layout.operator(
+            "registan.teardown_scene",
+            text="Remove Scene Setup",
+            icon="X",
         )
         layout.operator(
             "registan.clear",
