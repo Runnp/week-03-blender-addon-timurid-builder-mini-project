@@ -1,185 +1,112 @@
 # week-03-blender-addon-registan-mini-project
 
-Procedural Uzbek / Timurid-style architecture generator addon for Blender.
+**Procedural Timurid / Uzbek architecture generator — Blender addon**
+
+Inspired by the Registan of Samarkand, Uzbek mosques, and Central Asian Timurid heritage.
 
 ---
 
-# Vision
+## What It Does
 
-A Blender addon that can generate stylized Central Asian architectural structures with adjustable procedural settings.
+One-click procedural generation of stylised Timurid buildings inside Blender:
 
-The long-term goal is to explore:
+- Stepped building base with wall inset
+- Blue hemisphere dome with tambour drum
+- Tapered minarets at corners
+- Pointed iwan arch entrances
+- Optional open courtyard with perimeter walls
 
-* procedural generation
-* computer graphics
-* digital heritage
-* parametric architecture
-* Blender Python API
-* geometry systems
-
-Inspired by:
-
-* Timurid architecture
-* Uzbek mosques and madrasas
-* courtyards and ayvans
-* blue domes
-* tiled facades
-* traditional symmetry
+All elements are adjustable via a sidebar panel (`N` panel → **Registan** tab).
 
 ---
 
-# Current Goals (Week 03)
+## Installation
 
-## MVP
+1. Zip the `addon/` folder (or the whole repo root).
+2. In Blender: **Edit → Preferences → Add-ons → Install** → select the zip.
+3. Enable **"Registan Generator"** in the list.
+4. Open the sidebar in the 3D Viewport (`N`), go to the **Registan** tab.
 
-Generate:
-
-* base structure
-* dome
-* minaret
-* arch entrance
-
-Using sliders/settings for:
-
-* building width
-* building height
-* dome size
-* minaret height
-* arch count
-* symmetry
-* courtyard size
+> Tested on Blender 3.6+. Python 3.10 (bundled with Blender) — no extra pip installs needed.
 
 ---
 
-# Tech Stack
+## Project Structure
 
-* Python
-* Blender API (`bpy`)
-* VS Code
-* Git + GitHub
-
----
-
-# Planned Features
-
-## Phase 1
-
-* Procedural mosque generator
-* Simple UI panel
-* Adjustable dimensions
-* Modular geometry system
-
-## Phase 2
-
-* Materials/colors
-* Tile pattern generation
-* Multiple architectural presets
-* Better topology
-
-## Phase 3
-
-* Full procedural neighborhoods
-* Uzbek traditional homes
-* Timurid madrasa presets
-* AI/NLP prompt-based generation
-
----
-
-# Project Structure
-
-```text
-week-03-blender-addon-registan-mini-project/
-│
-├── addon/
-│   ├── __init__.py
-│   ├── operators.py
-│   ├── panels.py
-│   └── properties.py
-│
-├── generators/
-│   ├── base_building.py
-│   ├── dome.py
-│   ├── minaret.py
-│   ├── arch.py
-│   └── courtyard.py
-│
-├── utils/
-│   ├── mesh_utils.py
-│   ├── material_utils.py
-│   └── math_utils.py
-│
-├── materials/
-│
-├── demo_renders/
-│
-├── screenshots/
-│
-├── tests/
-│
-├── .gitignore
-├── README.md
-├── requirements.txt
-└── LICENSE
+```
+addon/           Blender addon registration, UI panel, operators, properties
+generators/      Procedural geometry builders (base, dome, minaret, arch, courtyard)
+utils/           Shared mesh, math, and material helpers
+materials/       (Phase 2) texture/node group presets
+tests/           Headless test scripts for geometry validation
 ```
 
 ---
 
-# First Development Steps
+## Sliders & Settings
 
-## 1. Setup Blender addon boilerplate
-
-* register addon
-* create UI panel
-* add generate button
-
-## 2. Create primitive building generator
-
-* cube base
-* scalable dimensions
-
-## 3. Create dome generator
-
-* UV sphere
-* scaling
-* placement logic
-
-## 4. Create minaret generator
-
-* cylinders
-* modular segments
-
-## 5. Combine into one-click generation
+| Setting | Default | Description |
+|---|---|---|
+| Building Width | 6.0 m | Width of the main body |
+| Building Depth | 6.0 m | Depth of the main body |
+| Building Height | 4.0 m | Wall height |
+| Dome Size | 2.5 m | Hemisphere radius |
+| Dome Segments | 16 | Mesh resolution |
+| Minaret Count | 2 | 0–4 corner minarets |
+| Minaret Height | 7.0 m | Total minaret height |
+| Minaret Radius | 0.4 m | Shaft radius |
+| Arch Count | 1 | Openings on front face |
+| Arch Height | 3.0 m | Arch opening height |
+| Arch Width | 1.6 m | Arch opening width |
+| Courtyard | off | Add open courtyard |
+| Courtyard Size | 5.0 m | Courtyard depth |
+| Symmetry | on | Mirror elements across X |
 
 ---
 
-# Example Future Usage
+## Roadmap
 
-```python
-Generate Building:
-- Style: Timurid
-- Dome Size: 4
-- Minarets: 2
-- Tile Color: Blue
-- Courtyard: Enabled
-```
+### Phase 1 — Done
+- [x] Addon boilerplate + UI panel
+- [x] Properties system
+- [x] Base building generator
+- [x] Dome generator (hemisphere + tambour drum)
+- [x] Minaret generator (tapered shaft + cone cap)
+- [x] Arch entrance generator (pointed iwan)
+- [x] Courtyard generator (ground + perimeter walls)
+- [x] Basic Timurid colour materials
+- [x] Muqarnas stalactite vault generator
+- [x] Procedural tile shader materials (dome, facade, gold)
+- [x] Architectural style presets (Timurid / Bukharan / Safavid / Minimal)
+- [x] Scene setup (3-point lights, ground plane, framed camera)
+- [x] OBJ export operator
+- [x] Controlled randomizer (Full Roll + Tweak with seed)
+- [x] LOD system (LOW / MID / HIGH with SubSurf + Bevel modifiers)
+- [x] Full 3-building madrasa complex generator
+- [x] Developer tools panel (stats, reload, changelog)
+
+### Phase 2
+- [ ] Tile pattern textures on dome + facade
+- [ ] Parametric muqarnas (stalactite vault) at arch intrados
+- [ ] Multiple style presets (Timurid / Safavid / early Uzbek)
+- [ ] Better mesh topology (edge loops, bevels)
+
+### Phase 3
+- [ ] Full procedural neighbourhood / madrasa complex
+- [ ] NLP prompt → parameters pipeline
+- [ ] Blender geometry nodes re-implementation
 
 ---
 
-# Research Possibilities
+## Inspiration
 
-Potential future directions:
-
-* procedural reconstruction of cultural heritage
-* NLP-to-3D architecture generation
-* computer graphics for digital humanities
-* educational visualization systems
-* procedural preservation of Central Asian architecture
+- Registan, Samarkand
+- Shah-i-Zinda necropolis
+- Kalon Minaret, Bukhara
+- Timurid architectural principles
 
 ---
 
-# Notes
+## License
 
-This project is intentionally scoped as a learning-focused mini-project.
-
-The goal is not photorealism.
-The goal is learning procedural graphics and Blender systems through culturally meaningful architecture.
+MIT — see `LICENSE`.

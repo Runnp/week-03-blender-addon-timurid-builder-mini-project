@@ -18,6 +18,22 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
         row = box.row(align=True)
         row.prop(props, "active_preset", text="")
         row.operator("registan.apply_preset", text="Load", icon="IMPORT")
+        # LOD
+        row = box.row(align=True)
+        row.prop(props, "active_lod", text="")
+        row.operator("registan.apply_lod", text="Apply LOD", icon="MESH_ICOSPHERE")
+
+        layout.separator(factor=0.5)
+
+        # --- Randomizer ---
+        box = layout.box()
+        box.label(text="Randomizer", icon="RNDCURVE")
+        row = box.row(align=True)
+        row.prop(props, "random_seed", text="Seed")
+        row = box.row(align=True)
+        row.operator("registan.randomize_full", text="Full Roll", icon="FILE_REFRESH")
+        row.operator("registan.randomize_tweak", text="Tweak", icon="CURVE_BEZCURVE")
+        box.prop(props, "random_tweak_pct", text="Tweak %", slider=True)
 
         layout.separator(factor=0.5)
 
@@ -78,9 +94,19 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
 
         # --- Misc ---
         layout.prop(props, "use_symmetry", icon="MOD_MIRROR")
+        # --- Complex Generator ---
+        box = layout.box()
+        box.label(text="Full Complex (3 Buildings)", icon="GROUP")
+        col_box = box.column(align=True)
+        col_box.prop(props, "complex_spacing")
+        col_box.prop(props, "complex_apply_tiles")
+        row = box.row(align=True)
+        row.operator("registan.generate_complex", text="Generate Complex", icon="COMMUNITY")
+        row.operator("registan.clear_complex", text="", icon="X")
+
         layout.separator()
 
-        # --- Generate Button ---
+        # --- Actions ---
         layout.operator(
             "registan.generate",
             text="Generate Building",
