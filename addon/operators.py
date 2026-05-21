@@ -22,6 +22,9 @@ import sys as _sys2
 _sys2.path.insert(0, _addon_dir)
 from addon.presets import apply_preset
 from utils.scene_setup import setup_scene, teardown_scene
+from utils.randomizer import randomize_full, randomize_tweak
+from utils.lod import apply_lod_to_props, apply_lod_modifiers, LOD_NAMES, LOD_LEVELS
+from generators.complex_generator import generate_complex, clear_complex
 
 
 COLLECTION_NAME = "Registan"
@@ -144,6 +147,99 @@ class REGISTAN_OT_Clear(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class REGISTAN_OT_ApplyLOD(bpy.types.Operator):
+    bl_idname = "registan.apply_lod"
+    bl_label = "Apply LOD"
+    bl_description = "Set mesh resolution and modifiers for the chosen detail level"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        lod = props.active_lod
+        apply_lod_to_props(props, lod)
+        apply_lod_modifiers(COLLECTION_NAME, lod)
+        cfg = LOD_LEVELS[lod]
+        self.report({"INFO"}, f"LOD '{lod}' applied — SubSurf x{cfg.subsurf_levels}, Bevel {cfg.bevel_width:.3f}m.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_RandomizeFull(bpy.types.Operator):
+    bl_idname = "registan.randomize_full"
+    bl_label = "Full Randomize"
+    bl_description = "Randomize all parameters within architectural constraints"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        seed = props.random_seed
+        applied = randomize_full(props, seed=seed)
+        # Bump seed so next click gives a new result
+        props.random_seed = (seed + 1) % 100000
+        self.report({"INFO"}, f"Randomized (seed {seed}). Seed bumped to {props.random_seed}.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_RandomizeTweak(bpy.types.Operator):
+    bl_idname = "registan.randomize_tweak"
+    bl_label = "Tweak"
+    bl_description = "Nudge current values by a small random amount"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        seed = props.random_seed
+        pct = props.random_tweak_pct / 100.0
+        randomize_tweak(props, tweak_pct=pct, seed=seed)
+        props.random_seed = (seed + 1) % 100000
+        self.report({"INFO"}, f"Tweaked (seed {seed}).")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_GenerateComplex(bpy.types.Operator):
+    bl_idname = "registan.generate_complex"
+    bl_label = "Generate Full Complex"
+    bl_description = "Generate three-building Registan madrasa complex"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        p = {
+            "width": props.building_width,
+            "depth": props.building_depth,
+            "height": props.building_height,
+            "dome_size": props.dome_size,
+            "dome_segments": props.dome_segments,
+            "minaret_height": props.minaret_height,
+            "minaret_radius": props.minaret_radius,
+            "minaret_segments": props.minaret_segments,
+            "minaret_count": props.minaret_count,
+            "arch_count": props.arch_count,
+            "arch_height": props.arch_height,
+            "arch_width": props.arch_width,
+            "muqarnas_enabled": props.muqarnas_enabled,
+            "muqarnas_tiers": props.muqarnas_tiers,
+            "courtyard_size": props.courtyard_size,
+            "symmetry": props.use_symmetry,
+            "complex_spacing": props.complex_spacing,
+            "complex_apply_tiles": props.complex_apply_tiles,
+        }
+        generate_complex(p)
+        self.report({"INFO"}, "Registan complex generated.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_ClearComplex(bpy.types.Operator):
+    bl_idname = "registan.clear_complex"
+    bl_label = "Clear Complex"
+    bl_description = "Remove the full madrasa complex"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        clear_complex()
+        self.report({"INFO"}, "Complex cleared.")
+        return {"FINISHED"}
+
+
 class REGISTAN_OT_SetupScene(bpy.types.Operator):
     bl_idname = "registan.setup_scene"
     bl_label = "Setup Scene (Lights + Camera)"
@@ -217,7 +313,12 @@ class REGISTAN_OT_ExportOBJ(bpy.types.Operator):
 
 def register():
     bpy.utils.register_class(REGISTAN_OT_ApplyPreset)
+    bpy.utils.register_class(REGISTAN_OT_ApplyLOD)
+    bpy.utils.register_class(REGISTAN_OT_RandomizeFull)
+    bpy.utils.register_class(REGISTAN_OT_RandomizeTweak)
     bpy.utils.register_class(REGISTAN_OT_Generate)
+    bpy.utils.register_class(REGISTAN_OT_GenerateComplex)
+    bpy.utils.register_class(REGISTAN_OT_ClearComplex)
     bpy.utils.register_class(REGISTAN_OT_ApplyTiles)
     bpy.utils.register_class(REGISTAN_OT_SetupScene)
     bpy.utils.register_class(REGISTAN_OT_TeardownScene)
@@ -231,5 +332,10 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_OT_TeardownScene)
     bpy.utils.unregister_class(REGISTAN_OT_SetupScene)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyTiles)
+    bpy.utils.unregister_class(REGISTAN_OT_ClearComplex)
+    bpy.utils.unregister_class(REGISTAN_OT_GenerateComplex)
     bpy.utils.unregister_class(REGISTAN_OT_Generate)
+    bpy.utils.unregister_class(REGISTAN_OT_RandomizeTweak)
+    bpy.utils.unregister_class(REGISTAN_OT_RandomizeFull)
+    bpy.utils.unregister_class(REGISTAN_OT_ApplyLOD)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyPreset)

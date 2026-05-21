@@ -2,6 +2,10 @@ import bpy
 
 from .presets import PRESET_NAMES
 
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+from utils.lod import LOD_NAMES
+
 
 class RegistanProperties(bpy.types.PropertyGroup):
 
@@ -10,6 +14,13 @@ class RegistanProperties(bpy.types.PropertyGroup):
         items=[(n, n, f"{n} style preset") for n in PRESET_NAMES],
         default=PRESET_NAMES[0],
         description="Architectural style preset",
+    )
+
+    active_lod: bpy.props.EnumProperty(
+        name="Detail Level",
+        items=[(n, n, f"{n} mesh detail") for n in LOD_NAMES],
+        default="MID",
+        description="Mesh resolution level (LOW / MID / HIGH)",
     )
 
     # --- Building base ---
@@ -116,6 +127,22 @@ class RegistanProperties(bpy.types.PropertyGroup):
         max=4.0,
     )
 
+    # --- Randomizer ---
+    random_seed: bpy.props.IntProperty(
+        name="Seed",
+        default=42,
+        min=0,
+        max=99999,
+        description="Random seed for reproducible variation",
+    )
+    random_tweak_pct: bpy.props.FloatProperty(
+        name="Tweak %",
+        default=15.0,
+        min=1.0,
+        max=50.0,
+        description="How much Tweak nudges each value (percent of range)",
+    )
+
     # --- Muqarnas ---
     muqarnas_enabled: bpy.props.BoolProperty(
         name="Muqarnas",
@@ -128,6 +155,20 @@ class RegistanProperties(bpy.types.PropertyGroup):
         min=1,
         max=5,
         description="Number of concentric muqarnas rings",
+    )
+
+    # --- Complex Generator ---
+    complex_spacing: bpy.props.FloatProperty(
+        name="Building Gap",
+        default=3.0,
+        min=1.0,
+        max=15.0,
+        description="Space between the three buildings in the complex",
+    )
+    complex_apply_tiles: bpy.props.BoolProperty(
+        name="Auto Tile Materials",
+        default=True,
+        description="Automatically apply tile materials after generating complex",
     )
 
     # --- Courtyard ---
