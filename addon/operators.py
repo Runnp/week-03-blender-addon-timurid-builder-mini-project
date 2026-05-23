@@ -25,6 +25,9 @@ from utils.scene_setup import setup_scene, teardown_scene
 from utils.randomizer import randomize_full, randomize_tweak
 from utils.lod import apply_lod_to_props, apply_lod_modifiers, LOD_NAMES, LOD_LEVELS
 from generators.complex_generator import generate_complex, clear_complex
+from generators.pishtaq import generate_pishtaq
+from generators.fountain import generate_fountain
+from utils.history import push as history_push, back as history_back, forward as history_forward, status as history_status
 
 
 COLLECTION_NAME = "Registan"
@@ -93,9 +96,19 @@ class REGISTAN_OT_Generate(bpy.types.Operator):
                     p["muqarnas_z"] = props.arch_height * 0.72
                     generate_muqarnas(p)
 
+        if props.pishtaq_enabled:
+            p["pishtaq_height"] = props.building_height * props.pishtaq_height_factor
+            p["pishtaq_width"]  = props.arch_width * props.pishtaq_width_factor
+            p["pishtaq_crown_steps"] = props.pishtaq_crown_steps
+            generate_pishtaq(p)
+
         if props.courtyard_enabled:
             generate_courtyard(p)
+            if props.fountain_enabled:
+                p["fountain_spouts"] = props.fountain_spouts
+                generate_fountain(p)
 
+        history_push(p)
         self.report({"INFO"}, "Registan building generated.")
         return {"FINISHED"}
 
@@ -144,6 +157,38 @@ class REGISTAN_OT_Clear(bpy.types.Operator):
             col = bpy.data.collections[COLLECTION_NAME]
             _clear_collection(col)
             self.report({"INFO"}, "Registan collection cleared.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_HistoryBack(bpy.types.Operator):
+    bl_idname = "registan.history_back"
+    bl_label = "History Back"
+    bl_description = "Restore previous build parameters from generate history"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        entry = history_back(context.scene.registan)
+        if entry is None:
+            self.report({"WARNING"}, "Already at oldest history entry.")
+            return {"CANCELLED"}
+        st = history_status()
+        self.report({"INFO"}, f"History ← step {st['cursor'] + 1}/{st['total']}")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_HistoryForward(bpy.types.Operator):
+    bl_idname = "registan.history_forward"
+    bl_label = "History Forward"
+    bl_description = "Restore next build parameters from generate history"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        entry = history_forward(context.scene.registan)
+        if entry is None:
+            self.report({"WARNING"}, "Already at newest history entry.")
+            return {"CANCELLED"}
+        st = history_status()
+        self.report({"INFO"}, f"History → step {st['cursor'] + 1}/{st['total']}")
         return {"FINISHED"}
 
 
@@ -314,6 +359,8 @@ class REGISTAN_OT_ExportOBJ(bpy.types.Operator):
 def register():
     bpy.utils.register_class(REGISTAN_OT_ApplyPreset)
     bpy.utils.register_class(REGISTAN_OT_ApplyLOD)
+    bpy.utils.register_class(REGISTAN_OT_HistoryBack)
+    bpy.utils.register_class(REGISTAN_OT_HistoryForward)
     bpy.utils.register_class(REGISTAN_OT_RandomizeFull)
     bpy.utils.register_class(REGISTAN_OT_RandomizeTweak)
     bpy.utils.register_class(REGISTAN_OT_Generate)
@@ -337,5 +384,7 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_OT_Generate)
     bpy.utils.unregister_class(REGISTAN_OT_RandomizeTweak)
     bpy.utils.unregister_class(REGISTAN_OT_RandomizeFull)
+    bpy.utils.unregister_class(REGISTAN_OT_HistoryForward)
+    bpy.utils.unregister_class(REGISTAN_OT_HistoryBack)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyLOD)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyPreset)

@@ -83,6 +83,15 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             sub.label(text="Muqarnas Vault", icon="OUTLINER_OB_LATTICE")
             if props.muqarnas_enabled:
                 box.prop(props, "muqarnas_tiers")
+            # Pishtaq sub-toggle
+            sub2 = box.row()
+            sub2.prop(props, "pishtaq_enabled", text="")
+            sub2.label(text="Pishtaq Portal", icon="WINDOW")
+            if props.pishtaq_enabled:
+                col2 = box.column(align=True)
+                col2.prop(props, "pishtaq_height_factor")
+                col2.prop(props, "pishtaq_width_factor")
+                col2.prop(props, "pishtaq_crown_steps")
 
         # --- Courtyard ---
         box = layout.box()
@@ -91,6 +100,11 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
         row.label(text="Courtyard", icon="GRID")
         if props.courtyard_enabled:
             box.prop(props, "courtyard_size")
+            row_f = box.row()
+            row_f.prop(props, "fountain_enabled", text="")
+            row_f.label(text="Hauz Fountain", icon="FORCE_TURBULENCE")
+            if props.fountain_enabled:
+                box.prop(props, "fountain_spouts")
 
         # --- Misc ---
         layout.prop(props, "use_symmetry", icon="MOD_MIRROR")

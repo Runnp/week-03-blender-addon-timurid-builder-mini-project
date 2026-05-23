@@ -157,6 +157,34 @@ class RegistanProperties(bpy.types.PropertyGroup):
         description="Number of concentric muqarnas rings",
     )
 
+    # --- Pishtaq Portal ---
+    pishtaq_enabled: bpy.props.BoolProperty(
+        name="Pishtaq Portal",
+        default=False,
+        description="Generate a tall gateway portal framing the main arch",
+    )
+    pishtaq_height_factor: bpy.props.FloatProperty(
+        name="Portal Height",
+        default=1.35,
+        min=1.05,
+        max=2.0,
+        description="Pishtaq height as a multiple of building height",
+    )
+    pishtaq_width_factor: bpy.props.FloatProperty(
+        name="Portal Width",
+        default=2.8,
+        min=1.5,
+        max=5.0,
+        description="Pishtaq width as a multiple of arch width",
+    )
+    pishtaq_crown_steps: bpy.props.IntProperty(
+        name="Crown Steps",
+        default=5,
+        min=2,
+        max=12,
+        description="Number of merlon pairs in the stepped crown parapet",
+    )
+
     # --- Complex Generator ---
     complex_spacing: bpy.props.FloatProperty(
         name="Building Gap",
@@ -182,6 +210,16 @@ class RegistanProperties(bpy.types.PropertyGroup):
         default=5.0,
         min=2.0,
         max=20.0,
+    )
+    fountain_enabled: bpy.props.BoolProperty(
+        name="Courtyard Fountain",
+        default=False,
+        description="Add an octagonal hauz fountain to the courtyard",
+    )
+    fountain_spouts: bpy.props.BoolProperty(
+        name="Rim Spouts",
+        default=True,
+        description="Add 4 small spout jets around the basin rim",
     )
 
     # --- Symmetry ---

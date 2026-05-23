@@ -10,7 +10,7 @@ bl_info = {
 
 import bpy
 
-from . import properties, operators, panels, dev_panel
+from . import properties, operators, panels, dev_panel, snapshot_panel
 
 
 def register():
@@ -18,9 +18,11 @@ def register():
     operators.register()
     panels.register()
     dev_panel.register()
+    snapshot_panel.register()
 
 
 def unregister():
+    snapshot_panel.unregister()
     dev_panel.unregister()
     panels.unregister()
     operators.unregister()
