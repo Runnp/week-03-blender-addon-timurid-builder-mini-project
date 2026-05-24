@@ -11,6 +11,7 @@ Features:
 
 import bpy
 import sys
+from utils.history import status as history_status
 
 CHANGELOG = [
     ("Push 13", "Dev tools panel, stats, reload, changelog"),
@@ -42,6 +43,14 @@ class REGISTAN_PT_DevPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+
+        # --- Generate History ---
+        st = history_status()
+        box_h = layout.box()
+        box_h.label(text=f"Generate History  ({st['cursor'] + 1 if st['total'] else 0}/{st['total']})", icon="TIME")
+        row = box_h.row(align=True)
+        row_back = row.operator("registan.history_back",    text="◀  Back",    icon="TRIA_LEFT")
+        row_fwd  = row.operator("registan.history_forward", text="Forward  ▶", icon="TRIA_RIGHT")
 
         # --- Stats ---
         box = layout.box()
@@ -82,6 +91,7 @@ class REGISTAN_PT_DevPanel(bpy.types.Panel):
         box = layout.box()
         box.label(text="Dev Actions", icon="SCRIPT")
         box.operator("registan.reload_addon", text="Reload Addon", icon="FILE_REFRESH")
+        box.operator("registan.write_config", text="Write Default config.json", icon="FILE_NEW")
         box.operator("registan.print_props", text="Print Props to Console", icon="CONSOLE")
 
         # --- Changelog ---
@@ -131,6 +141,21 @@ class REGISTAN_OT_ReloadAddon(bpy.types.Operator):
         except Exception as e:
             self.report({"ERROR"}, f"Re-enable failed: {e}")
 
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_WriteConfig(bpy.types.Operator):
+    bl_idname = "registan.write_config"
+    bl_label = "Write Default config.json"
+    bl_description = "Write a default config.json to the project root"
+
+    def execute(self, context):
+        try:
+            from utils.config import write_default_config, CONFIG_PATH
+            write_default_config()
+            self.report({"INFO"}, f"config.json written to {CONFIG_PATH}")
+        except Exception as e:
+            self.report({"ERROR"}, str(e))
         return {"FINISHED"}
 
 
