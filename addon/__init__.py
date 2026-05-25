@@ -9,8 +9,14 @@ bl_info = {
 }
 
 import bpy
+import sys, os
 
-from . import properties, operators, panels, dev_panel, snapshot_panel
+# Ensure project root is importable
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+from . import properties, operators, panels, dev_panel, snapshot_panel, palette_panel
 
 
 def register():
@@ -19,9 +25,20 @@ def register():
     panels.register()
     dev_panel.register()
     snapshot_panel.register()
+    palette_panel.register()
+
+    # Apply config.json defaults on first load
+    try:
+        from utils.config import load_config, apply_to_props
+        load_config(force=True)
+        if hasattr(bpy.context, "scene") and bpy.context.scene:
+            apply_to_props(bpy.context.scene.registan)
+    except Exception as e:
+        print(f"[Registan] Config load skipped: {e}")
 
 
 def unregister():
+    palette_panel.unregister()
     snapshot_panel.unregister()
     dev_panel.unregister()
     panels.unregister()

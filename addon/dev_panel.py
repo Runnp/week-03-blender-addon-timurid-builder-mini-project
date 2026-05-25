@@ -90,9 +90,10 @@ class REGISTAN_PT_DevPanel(bpy.types.Panel):
         # --- Reload Addon ---
         box = layout.box()
         box.label(text="Dev Actions", icon="SCRIPT")
-        box.operator("registan.reload_addon", text="Reload Addon", icon="FILE_REFRESH")
-        box.operator("registan.write_config", text="Write Default config.json", icon="FILE_NEW")
-        box.operator("registan.print_props", text="Print Props to Console", icon="CONSOLE")
+        box.operator("registan.reload_addon",   text="Reload Addon",              icon="FILE_REFRESH")
+        box.operator("registan.reload_config",  text="Reload config.json",        icon="FILE_CACHE")
+        box.operator("registan.write_config",   text="Write Default config.json", icon="FILE_NEW")
+        box.operator("registan.print_props",    text="Print Props to Console",    icon="CONSOLE")
 
         # --- Changelog ---
         box = layout.box()
@@ -144,6 +145,22 @@ class REGISTAN_OT_ReloadAddon(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class REGISTAN_OT_ReloadConfig(bpy.types.Operator):
+    bl_idname = "registan.reload_config"
+    bl_label = "Reload config.json"
+    bl_description = "Re-read config.json and apply values to current scene properties"
+
+    def execute(self, context):
+        try:
+            from utils.config import load_config, apply_to_props
+            load_config(force=True)
+            applied = apply_to_props(context.scene.registan)
+            self.report({"INFO"}, f"Config reloaded — {len(applied)} props updated.")
+        except Exception as e:
+            self.report({"ERROR"}, str(e))
+        return {"FINISHED"}
+
+
 class REGISTAN_OT_WriteConfig(bpy.types.Operator):
     bl_idname = "registan.write_config"
     bl_label = "Write Default config.json"
@@ -177,6 +194,8 @@ class REGISTAN_OT_PrintProps(bpy.types.Operator):
 
 
 def register():
+    bpy.utils.register_class(REGISTAN_OT_ReloadConfig)
+    bpy.utils.register_class(REGISTAN_OT_WriteConfig)
     bpy.utils.register_class(REGISTAN_OT_ReloadAddon)
     bpy.utils.register_class(REGISTAN_OT_PrintProps)
     bpy.utils.register_class(REGISTAN_PT_DevPanel)
@@ -186,3 +205,5 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_PT_DevPanel)
     bpy.utils.unregister_class(REGISTAN_OT_PrintProps)
     bpy.utils.unregister_class(REGISTAN_OT_ReloadAddon)
+    bpy.utils.unregister_class(REGISTAN_OT_WriteConfig)
+    bpy.utils.unregister_class(REGISTAN_OT_ReloadConfig)
