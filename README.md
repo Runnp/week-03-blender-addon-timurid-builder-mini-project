@@ -66,24 +66,38 @@ tests/           Headless test scripts for geometry validation
 
 ## Roadmap
 
-### Phase 1 — Done
+### Phase 1 — Done (32 pushes)
 - [x] Addon boilerplate + UI panel
-- [x] Properties system
-- [x] Base building generator
-- [x] Dome generator (hemisphere + tambour drum)
-- [x] Minaret generator (tapered shaft + cone cap)
-- [x] Arch entrance generator (pointed iwan)
-- [x] Courtyard generator (ground + perimeter walls)
-- [x] Basic Timurid colour materials
+- [x] Utils layer (mesh, math, material helpers)
+- [x] Base building + dome generators
+- [x] Minaret + arch + courtyard generators
+- [x] Repo files + headless test stub
 - [x] Muqarnas stalactite vault generator
-- [x] Procedural tile shader materials (dome, facade, gold)
+- [x] Procedural tile shader materials
 - [x] Architectural style presets (Timurid / Bukharan / Safavid / Minimal)
-- [x] Scene setup (3-point lights, ground plane, framed camera)
-- [x] OBJ export operator
-- [x] Controlled randomizer (Full Roll + Tweak with seed)
-- [x] LOD system (LOW / MID / HIGH with SubSurf + Bevel modifiers)
-- [x] Full 3-building madrasa complex generator
+- [x] Scene setup (lights, ground plane, camera) + OBJ export
+- [x] Controlled randomizer (Full Roll + Tweak + seed)
+- [x] LOD system (LOW / MID / HIGH, SubSurf + Bevel modifiers)
+- [x] Full 3-building complex generator
 - [x] Developer tools panel (stats, reload, changelog)
+- [x] Pishtaq portal generator
+- [x] Geometry snapshot system (save/load to .blend Text blocks)
+- [x] Headless render pipeline (CLI + .bat)
+- [x] Octagonal hauz fountain generator
+- [x] Generate history stack (back/forward)
+- [x] Pure-Python test suite — **64 tests** across 3 files
+- [x] GitHub Actions CI (flake8 + pytest)
+- [x] Girih tile relief geometry (extruded star patterns)
+- [x] Weathering system (Musgrave displacement + wear node injection)
+- [x] SVG floor plan exporter (pure Python, annotated architectural drawing)
+- [x] Build animation keyframe system (5-phase construction sequence)
+- [x] Serefe balcony generator (projecting gallery ring on minarets)
+- [x] Multi-language UI labels (EN / O'zbek / Русский)
+- [x] Config file system (config.json, hot-reload, write default)
+- [x] Wall arcade generator (blind pointed-arch niches on side walls)
+- [x] Material palette editor panel (live colour pickers for all 6 slots)
+- [x] Dev panel fix + config hot-reload + expanded test suite (64 passing)
+- [x] CHANGELOG.md + architecture diagram + contribution guide
 
 ### Phase 2
 - [ ] Tile pattern textures on dome + facade

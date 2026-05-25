@@ -27,7 +27,13 @@ from utils.lod import apply_lod_to_props, apply_lod_modifiers, LOD_NAMES, LOD_LE
 from generators.complex_generator import generate_complex, clear_complex
 from generators.pishtaq import generate_pishtaq
 from generators.fountain import generate_fountain
+from generators.girih import generate_girih_panel, generate_girih_dome_band
+from generators.balcony import generate_balconies
+from generators.arcade import generate_arcade
 from utils.history import push as history_push, back as history_back, forward as history_forward, status as history_status
+from utils.weathering import apply_weathering, remove_weathering
+from utils.svg_export import export_floor_plan
+from utils.animation import create_build_animation, clear_build_animation
 
 
 COLLECTION_NAME = "Registan"
@@ -83,6 +89,8 @@ class REGISTAN_OT_Generate(bpy.types.Operator):
 
         if props.minaret_enabled:
             generate_minarets(p)
+            if props.balcony_enabled:
+                generate_balconies(p)
 
         if props.arch_enabled:
             generate_arches(p)
@@ -101,6 +109,20 @@ class REGISTAN_OT_Generate(bpy.types.Operator):
             p["pishtaq_width"]  = props.arch_width * props.pishtaq_width_factor
             p["pishtaq_crown_steps"] = props.pishtaq_crown_steps
             generate_pishtaq(p)
+
+        if props.girih_enabled:
+            p["girih_cell"]    = props.girih_cell_size
+            p["girih_extrude"] = props.girih_extrude
+            generate_girih_panel(p)
+            if props.dome_enabled and props.girih_dome_band:
+                generate_girih_dome_band(p)
+
+        if props.arcade_enabled:
+            p["arcade_bays"]           = props.arcade_bays
+            p["arcade_height"]         = props.building_height * props.arcade_height_factor
+            p["arcade_back"]           = props.arcade_back
+            p["arcade_roundel"]        = props.arcade_roundel
+            generate_arcade(p)
 
         if props.courtyard_enabled:
             generate_courtyard(p)
@@ -157,6 +179,97 @@ class REGISTAN_OT_Clear(bpy.types.Operator):
             col = bpy.data.collections[COLLECTION_NAME]
             _clear_collection(col)
             self.report({"INFO"}, "Registan collection cleared.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_CreateAnimation(bpy.types.Operator):
+    bl_idname = "registan.create_animation"
+    bl_label = "Create Build Animation"
+    bl_description = "Keyframe a construction sequence: elements rise from ground in phases"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        frames = props.anim_frames
+        create_build_animation(COLLECTION_NAME, total_frames=frames)
+        create_build_animation("Registan_Complex", total_frames=frames)
+        self.report({"INFO"}, f"Build animation created ({frames} frames).")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_ClearAnimation(bpy.types.Operator):
+    bl_idname = "registan.clear_animation"
+    bl_label = "Clear Build Animation"
+    bl_description = "Remove all generated build animation keyframes"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        clear_build_animation(COLLECTION_NAME)
+        clear_build_animation("Registan_Complex")
+        self.report({"INFO"}, "Build animation cleared.")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_ExportSVG(bpy.types.Operator):
+    bl_idname = "registan.export_svg"
+    bl_label = "Export Floor Plan SVG"
+    bl_description = "Export a 2D top-down architectural floor plan as SVG"
+    bl_options = {"REGISTER"}
+
+    filepath: bpy.props.StringProperty(
+        subtype="FILE_PATH",
+        default="//registan_floor_plan.svg",
+    )
+
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        return {"RUNNING_MODAL"}
+
+    def execute(self, context):
+        props = context.scene.registan
+        p = {
+            "width":             props.building_width,
+            "depth":             props.building_depth,
+            "height":            props.building_height,
+            "dome_size":         props.dome_size,
+            "arch_width":        props.arch_width,
+            "arch_count":        props.arch_count,
+            "minaret_count":     props.minaret_count,
+            "minaret_radius":    props.minaret_radius,
+            "courtyard_enabled": props.courtyard_enabled,
+            "courtyard_size":    props.courtyard_size,
+            "fountain_enabled":  props.fountain_enabled,
+            "active_preset":     props.active_preset,
+        }
+        export_floor_plan(p, bpy.path.abspath(self.filepath))
+        self.report({"INFO"}, f"SVG floor plan saved to {self.filepath}")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_ApplyWeathering(bpy.types.Operator):
+    bl_idname = "registan.apply_weathering"
+    bl_label = "Apply Weathering"
+    bl_description = "Add displacement + material wear to simulate age"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        intensity = context.scene.registan.weathering_intensity
+        apply_weathering(COLLECTION_NAME, intensity)
+        apply_weathering("Registan_Complex", intensity)
+        self.report({"INFO"}, f"Weathering applied (intensity {intensity:.2f}).")
+        return {"FINISHED"}
+
+
+class REGISTAN_OT_RemoveWeathering(bpy.types.Operator):
+    bl_idname = "registan.remove_weathering"
+    bl_label = "Remove Weathering"
+    bl_description = "Strip all weathering effects"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        remove_weathering(COLLECTION_NAME)
+        remove_weathering("Registan_Complex")
+        self.report({"INFO"}, "Weathering removed.")
         return {"FINISHED"}
 
 
@@ -359,6 +472,11 @@ class REGISTAN_OT_ExportOBJ(bpy.types.Operator):
 def register():
     bpy.utils.register_class(REGISTAN_OT_ApplyPreset)
     bpy.utils.register_class(REGISTAN_OT_ApplyLOD)
+    bpy.utils.register_class(REGISTAN_OT_ApplyWeathering)
+    bpy.utils.register_class(REGISTAN_OT_RemoveWeathering)
+    bpy.utils.register_class(REGISTAN_OT_ExportSVG)
+    bpy.utils.register_class(REGISTAN_OT_CreateAnimation)
+    bpy.utils.register_class(REGISTAN_OT_ClearAnimation)
     bpy.utils.register_class(REGISTAN_OT_HistoryBack)
     bpy.utils.register_class(REGISTAN_OT_HistoryForward)
     bpy.utils.register_class(REGISTAN_OT_RandomizeFull)
@@ -386,5 +504,10 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_OT_RandomizeFull)
     bpy.utils.unregister_class(REGISTAN_OT_HistoryForward)
     bpy.utils.unregister_class(REGISTAN_OT_HistoryBack)
+    bpy.utils.unregister_class(REGISTAN_OT_ClearAnimation)
+    bpy.utils.unregister_class(REGISTAN_OT_CreateAnimation)
+    bpy.utils.unregister_class(REGISTAN_OT_ExportSVG)
+    bpy.utils.unregister_class(REGISTAN_OT_RemoveWeathering)
+    bpy.utils.unregister_class(REGISTAN_OT_ApplyWeathering)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyLOD)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyPreset)

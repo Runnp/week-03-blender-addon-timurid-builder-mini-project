@@ -22,6 +22,8 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
         row = box.row(align=True)
         row.prop(props, "active_lod", text="")
         row.operator("registan.apply_lod", text="Apply LOD", icon="MESH_ICOSPHERE")
+        # Language
+        box.prop(props, "ui_language", text="Language", icon="WORLD")
 
         layout.separator(factor=0.5)
 
@@ -66,6 +68,9 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             col.prop(props, "minaret_height")
             col.prop(props, "minaret_radius")
             col.prop(props, "minaret_segments")
+            sub_b = box.row()
+            sub_b.prop(props, "balcony_enabled", text="")
+            sub_b.label(text="Serefe Balcony", icon="HANDLETYPE_AUTO_CLAMP_VEC")
 
         # --- Arch ---
         box = layout.box()
@@ -108,6 +113,30 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
 
         # --- Misc ---
         layout.prop(props, "use_symmetry", icon="MOD_MIRROR")
+
+        # --- Girih ---
+        box = layout.box()
+        row = box.row()
+        row.prop(props, "girih_enabled", text="")
+        row.label(text="Girih Relief", icon="MESH_GRID")
+        if props.girih_enabled:
+            col = box.column(align=True)
+            col.prop(props, "girih_cell_size")
+            col.prop(props, "girih_extrude")
+            col.prop(props, "girih_dome_band")
+
+        # --- Arcade ---
+        box = layout.box()
+        row = box.row()
+        row.prop(props, "arcade_enabled", text="")
+        row.label(text="Wall Arcade", icon="MOD_ARRAY")
+        if props.arcade_enabled:
+            col = box.column(align=True)
+            col.prop(props, "arcade_bays")
+            col.prop(props, "arcade_height_factor")
+            col.prop(props, "arcade_back")
+            col.prop(props, "arcade_roundel")
+
         # --- Complex Generator ---
         box = layout.box()
         box.label(text="Full Complex (3 Buildings)", icon="GROUP")
@@ -131,6 +160,11 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             text="Apply Tile Materials",
             icon="MATERIAL",
         )
+        # Weathering
+        row = layout.row(align=True)
+        row.prop(context.scene.registan, "weathering_intensity", text="Weather", slider=True)
+        row.operator("registan.apply_weathering", text="Apply", icon="FREEZE")
+        row.operator("registan.remove_weathering", text="", icon="X")
         layout.separator(factor=0.3)
         layout.operator(
             "registan.setup_scene",
@@ -142,6 +176,16 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             text="Export OBJ…",
             icon="EXPORT",
         )
+        layout.operator(
+            "registan.export_svg",
+            text="Export Floor Plan SVG…",
+            icon="FILE_IMAGE",
+        )
+        layout.separator(factor=0.3)
+        row_anim = layout.row(align=True)
+        row_anim.prop(context.scene.registan, "anim_frames", text="Frames")
+        row_anim.operator("registan.create_animation", text="Animate", icon="PLAY")
+        row_anim.operator("registan.clear_animation",  text="",        icon="X")
         layout.separator(factor=0.3)
         layout.operator(
             "registan.teardown_scene",
