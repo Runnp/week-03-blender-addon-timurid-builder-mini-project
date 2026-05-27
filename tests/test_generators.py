@@ -75,4 +75,24 @@ def test_arches():
     col = _make_collection()
     p = {**BASE_PARAMS, "collection": col}
     generate_arches(p)
-    objs = [o for o in col.objects if "Arch" in o.name]
+    objs = [o for o in col.objects if "Arch" in o.name
+    assert len(objs) == BASE_PARAMS["arch_count"], f"Expected {BASE_PARAMS['arch_count']} arches, got {len(objs)}"
+    print("PASS test_arches")
+
+
+def test_courtyard():
+    col = _make_collection()
+    p = {**BASE_PARAMS, "collection": col}
+    generate_courtyard(p)
+    objs = [o for o in col.objects if "Courtyard" in o.name or "Wall" in o.name]
+    assert len(objs) > 0, "No courtyard objects generated"
+    print("PASS test_courtyard")
+
+
+if __name__ == "__main__":
+    test_base_building()
+    test_dome()
+    test_minarets()
+    test_arches()
+    test_courtyard()
+    print("\nAll tests passed.")
