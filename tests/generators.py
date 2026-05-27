@@ -1,12 +1,4 @@
 # tests/test_generators.py
-"""
-Headless geometry tests for the Registan generators.
-
-Run inside Blender's Python interpreter:
-    blender --background --python tests/test_generators.py
-
-Each test creates geometry, checks vertex/face counts, then clears the scene.
-"""
 
 import bpy
 import sys
