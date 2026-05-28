@@ -1,9 +1,3 @@
-"""
-material_utils.py
-Helpers for creating and assigning basic Principled BSDF materials.
-Used in Phase 1 for colour-only materials; extended in Phase 2 for tiles.
-"""
-
 import bpy
 
 
