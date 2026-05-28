@@ -1,7 +1,5 @@
 import bpy
 
-
-# Palette inspired by Timurid / Registan colour schemes
 PALETTE = {
     "terracotta": (0.72, 0.35, 0.18, 1.0),
     "azure_tile": (0.10, 0.35, 0.65, 1.0),
