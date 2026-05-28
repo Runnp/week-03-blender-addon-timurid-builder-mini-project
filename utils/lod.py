@@ -1,24 +1,3 @@
-"""
-lod.py
-Level-of-Detail (LOD) system for the Registan Generator.
-
-Three LOD levels:
-  LOW   — fast viewport, game-engine ready (low poly counts)
-  MID   — balanced, good for archviz previews
-  HIGH  — maximum detail, render quality
-
-LOD affects:
-  - dome_segments         (sphere ring count)
-  - minaret_segments      (cylinder ring count)
-  - muqarnas_tiers        (stalactite vault complexity)
-  - subdivision levels    (applied as a modifier post-generation)
-  - bevel on building edges (modifier)
-
-LOD multipliers are applied on top of the user's current slider values,
-so a user who already set dome_segments=32 won't get it forced down to 8
-unless they explicitly switch to LOW.
-"""
-
 import bpy
 from typing import NamedTuple
 
