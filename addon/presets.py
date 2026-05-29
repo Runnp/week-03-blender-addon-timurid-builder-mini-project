@@ -50,7 +50,7 @@ PRESETS: dict[str, dict[str, Any]] = {
         "dome_segments": 18,
         "minaret_enabled": True,
         "minaret_count": 2,
-        "minaret_height": 11.0,   # Bukharan minarets are notably tall/slender
+        "minaret_height": 11.0,   
         "minaret_radius": 0.32,
         "minaret_segments": 16,
         "arch_enabled": True,
