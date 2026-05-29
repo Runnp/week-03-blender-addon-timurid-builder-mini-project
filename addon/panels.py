@@ -97,6 +97,16 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
                 col2.prop(props, "pishtaq_height_factor")
                 col2.prop(props, "pishtaq_width_factor")
                 col2.prop(props, "pishtaq_crown_steps")
+            # Iwan sub-toggle
+            sub3 = box.row()
+            sub3.prop(props, "iwan_enabled", text="")
+            sub3.label(text="Iwan Hall", icon="MOD_BUILD")
+            if props.iwan_enabled:
+                col3 = box.column(align=True)
+                col3.prop(props, "iwan_depth_factor")
+                col3.prop(props, "iwan_side_niches")
+                if props.iwan_side_niches:
+                    col3.prop(props, "iwan_niche_count")
 
         # --- Courtyard ---
         box = layout.box()
@@ -159,6 +169,11 @@ class REGISTAN_PT_MainPanel(bpy.types.Panel):
             "registan.apply_tiles",
             text="Apply Tile Materials",
             icon="MATERIAL",
+        )
+        layout.operator(
+            "registan.apply_node_groups",
+            text="Apply Advanced Shaders",
+            icon="NODETREE",
         )
         # Weathering
         row = layout.row(align=True)

@@ -2,10 +2,8 @@ import bpy
 
 from .presets import PRESET_NAMES
 
-import sys as _s, os as _o
-_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
-from utils.lod import LOD_NAMES
-from utils.i18n import available_langs, set_lang
+from .utils.lod import LOD_NAMES
+from .utils.i18n import available_langs, set_lang
 
 
 class RegistanProperties(bpy.types.PropertyGroup):
@@ -188,6 +186,31 @@ class RegistanProperties(bpy.types.PropertyGroup):
         max=1.0,
         description="0 = pristine, 1 = heavily aged/weathered",
         subtype="FACTOR",
+    )
+
+    # --- Iwan Hall ---
+    iwan_enabled: bpy.props.BoolProperty(
+        name="Iwan Hall",
+        default=False,
+        description="Generate a deep vaulted entrance hall behind the main arch",
+    )
+    iwan_depth_factor: bpy.props.FloatProperty(
+        name="Iwan Depth",
+        default=1.8,
+        min=0.8,
+        max=4.0,
+        description="Hall depth as multiple of arch width",
+    )
+    iwan_side_niches: bpy.props.BoolProperty(
+        name="Side Niches",
+        default=True,
+        description="Add pointed niches in the iwan side walls",
+    )
+    iwan_niche_count: bpy.props.IntProperty(
+        name="Niches Per Side",
+        default=2,
+        min=1,
+        max=5,
     )
 
     # --- Wall Arcade ---
