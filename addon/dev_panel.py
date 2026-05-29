@@ -11,7 +11,7 @@ Features:
 
 import bpy
 import sys
-from utils.history import status as history_status
+from .utils.history import status as history_status
 
 CHANGELOG = [
     ("Push 13", "Dev tools panel, stats, reload, changelog"),
@@ -91,6 +91,7 @@ class REGISTAN_PT_DevPanel(bpy.types.Panel):
         box = layout.box()
         box.label(text="Dev Actions", icon="SCRIPT")
         box.operator("registan.reload_addon",   text="Reload Addon",              icon="FILE_REFRESH")
+        box.operator("registan.print_stats",    text="Print Stats Report",        icon="OUTLINER_DATA_STATISTICS")
         box.operator("registan.reload_config",  text="Reload config.json",        icon="FILE_CACHE")
         box.operator("registan.write_config",   text="Write Default config.json", icon="FILE_NEW")
         box.operator("registan.print_props",    text="Print Props to Console",    icon="CONSOLE")
@@ -145,6 +146,28 @@ class REGISTAN_OT_ReloadAddon(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class REGISTAN_OT_PrintStats(bpy.types.Operator):
+    bl_idname = "registan.print_stats"
+    bl_label = "Print Stats Report"
+    bl_description = "Run the project statistics reporter and print to system console"
+
+    def execute(self, context):
+        try:
+            import importlib.util, os
+            script = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "scripts", "project_stats.py"
+            )
+            spec = importlib.util.spec_from_file_location("project_stats", script)
+            mod  = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            mod.main()
+            self.report({"INFO"}, "Stats printed to system console.")
+        except Exception as e:
+            self.report({"ERROR"}, str(e))
+        return {"FINISHED"}
+
+
 class REGISTAN_OT_ReloadConfig(bpy.types.Operator):
     bl_idname = "registan.reload_config"
     bl_label = "Reload config.json"
@@ -152,7 +175,7 @@ class REGISTAN_OT_ReloadConfig(bpy.types.Operator):
 
     def execute(self, context):
         try:
-            from utils.config import load_config, apply_to_props
+            from .utils.config import load_config, apply_to_props
             load_config(force=True)
             applied = apply_to_props(context.scene.registan)
             self.report({"INFO"}, f"Config reloaded — {len(applied)} props updated.")
@@ -168,7 +191,7 @@ class REGISTAN_OT_WriteConfig(bpy.types.Operator):
 
     def execute(self, context):
         try:
-            from utils.config import write_default_config, CONFIG_PATH
+            from .utils.config import write_default_config, CONFIG_PATH
             write_default_config()
             self.report({"INFO"}, f"config.json written to {CONFIG_PATH}")
         except Exception as e:
@@ -194,6 +217,7 @@ class REGISTAN_OT_PrintProps(bpy.types.Operator):
 
 
 def register():
+    bpy.utils.register_class(REGISTAN_OT_PrintStats)
     bpy.utils.register_class(REGISTAN_OT_ReloadConfig)
     bpy.utils.register_class(REGISTAN_OT_WriteConfig)
     bpy.utils.register_class(REGISTAN_OT_ReloadAddon)
@@ -207,3 +231,4 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_OT_ReloadAddon)
     bpy.utils.unregister_class(REGISTAN_OT_WriteConfig)
     bpy.utils.unregister_class(REGISTAN_OT_ReloadConfig)
+    bpy.utils.unregister_class(REGISTAN_OT_PrintStats)

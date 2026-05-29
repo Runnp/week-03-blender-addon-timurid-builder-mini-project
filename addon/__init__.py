@@ -4,7 +4,7 @@ bl_info = {
     "version": (0, 1, 0),
     "blender": (3, 6, 0),
     "location": "View3D > Sidebar > Registan",
-    "description": "Procedural Timurid / Uzbek architecture generator",
+    "description": "Procedural Timurid & Ozbek Architecture Generator",
     "category": "Add Mesh",
 }
 
@@ -29,7 +29,7 @@ def register():
 
     # Apply config.json defaults on first load
     try:
-        from utils.config import load_config, apply_to_props
+        from .utils.config import load_config, apply_to_props
         load_config(force=True)
         if hasattr(bpy.context, "scene") and bpy.context.scene:
             apply_to_props(bpy.context.scene.registan)

@@ -1,39 +1,27 @@
 import bpy
-import sys
-import os
-
-# Allow importing from generators/ when addon is loaded as a package
-_addon_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if _addon_dir not in sys.path:
-    sys.path.insert(0, _addon_dir)
-
-from generators.base_building import generate_base
-from generators.dome import generate_dome
-from generators.minaret import generate_minarets
-from generators.arch import generate_arches
-from generators.courtyard import generate_courtyard
-from generators.muqarnas import generate_muqarnas
-
-import sys as _sys
-_sys.path.insert(0, _addon_dir)
-from utils.tile_material import apply_tile_materials_to_collection
-
-import sys as _sys2
-_sys2.path.insert(0, _addon_dir)
-from addon.presets import apply_preset
-from utils.scene_setup import setup_scene, teardown_scene
-from utils.randomizer import randomize_full, randomize_tweak
-from utils.lod import apply_lod_to_props, apply_lod_modifiers, LOD_NAMES, LOD_LEVELS
-from generators.complex_generator import generate_complex, clear_complex
-from generators.pishtaq import generate_pishtaq
-from generators.fountain import generate_fountain
-from generators.girih import generate_girih_panel, generate_girih_dome_band
-from generators.balcony import generate_balconies
-from generators.arcade import generate_arcade
-from utils.history import push as history_push, back as history_back, forward as history_forward, status as history_status
-from utils.weathering import apply_weathering, remove_weathering
-from utils.svg_export import export_floor_plan
-from utils.animation import create_build_animation, clear_build_animation
+from .generators.base_building import generate_base
+from .generators.dome import generate_dome
+from .generators.minaret import generate_minarets
+from .generators.arch import generate_arches
+from .generators.courtyard import generate_courtyard
+from .generators.muqarnas import generate_muqarnas
+from .generators.complex_generator import generate_complex, clear_complex
+from .generators.pishtaq import generate_pishtaq
+from .generators.fountain import generate_fountain
+from .generators.girih import generate_girih_panel, generate_girih_dome_band
+from .generators.balcony import generate_balconies
+from .generators.arcade import generate_arcade
+from .generators.iwan import generate_iwan
+from .utils.tile_material import apply_tile_materials_to_collection
+from .utils.scene_setup import setup_scene, teardown_scene
+from .utils.randomizer import randomize_full, randomize_tweak
+from .utils.lod import apply_lod_to_props, apply_lod_modifiers, LOD_NAMES, LOD_LEVELS
+from .utils.history import push as history_push, back as history_back, forward as history_forward, status as history_status
+from .utils.weathering import apply_weathering, remove_weathering
+from .utils.svg_export import export_floor_plan
+from .utils.animation import create_build_animation, clear_build_animation
+from .utils.node_groups import apply_girih_to_material, get_hex_tile_group, get_age_gradient_group
+from .presets import apply_preset
 
 
 COLLECTION_NAME = "Registan"
@@ -103,6 +91,11 @@ class REGISTAN_OT_Generate(bpy.types.Operator):
                     p["muqarnas_x"] = cx
                     p["muqarnas_z"] = props.arch_height * 0.72
                     generate_muqarnas(p)
+            if props.iwan_enabled:
+                p["iwan_depth"]        = props.arch_width * props.iwan_depth_factor
+                p["iwan_side_niches"]  = props.iwan_side_niches
+                p["iwan_niche_count"]  = props.iwan_niche_count
+                generate_iwan(p)
 
         if props.pishtaq_enabled:
             p["pishtaq_height"] = props.building_height * props.pishtaq_height_factor
@@ -353,6 +346,36 @@ class REGISTAN_OT_RandomizeTweak(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class REGISTAN_OT_ApplyNodeGroups(bpy.types.Operator):
+    bl_idname = "registan.apply_node_groups"
+    bl_label = "Apply Advanced Shaders"
+    bl_description = "Inject procedural node groups (girih star, hex tile, age gradient) onto dome and facade materials"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        applied = 0
+        for col_name in ["Registan", "Registan_Complex"]:
+            if col_name not in bpy.data.collections:
+                continue
+            col = bpy.data.collections[col_name]
+            all_objs = list(col.objects)
+            for child in col.children:
+                all_objs.extend(child.objects)
+            for obj in all_objs:
+                if obj.type != "MESH":
+                    continue
+                name = obj.name.lower()
+                for slot in obj.material_slots:
+                    mat = slot.material
+                    if mat is None:
+                        continue
+                    if "dome" in name:
+                        apply_girih_to_material(mat)
+                        applied += 1
+        self.report({"INFO"}, f"Advanced shaders applied to {applied} material slot(s).")
+        return {"FINISHED"}
+
+
 class REGISTAN_OT_GenerateComplex(bpy.types.Operator):
     bl_idname = "registan.generate_complex"
     bl_label = "Generate Full Complex"
@@ -485,6 +508,7 @@ def register():
     bpy.utils.register_class(REGISTAN_OT_GenerateComplex)
     bpy.utils.register_class(REGISTAN_OT_ClearComplex)
     bpy.utils.register_class(REGISTAN_OT_ApplyTiles)
+    bpy.utils.register_class(REGISTAN_OT_ApplyNodeGroups)
     bpy.utils.register_class(REGISTAN_OT_SetupScene)
     bpy.utils.register_class(REGISTAN_OT_TeardownScene)
     bpy.utils.register_class(REGISTAN_OT_ExportOBJ)
@@ -496,6 +520,7 @@ def unregister():
     bpy.utils.unregister_class(REGISTAN_OT_ExportOBJ)
     bpy.utils.unregister_class(REGISTAN_OT_TeardownScene)
     bpy.utils.unregister_class(REGISTAN_OT_SetupScene)
+    bpy.utils.unregister_class(REGISTAN_OT_ApplyNodeGroups)
     bpy.utils.unregister_class(REGISTAN_OT_ApplyTiles)
     bpy.utils.unregister_class(REGISTAN_OT_ClearComplex)
     bpy.utils.unregister_class(REGISTAN_OT_GenerateComplex)

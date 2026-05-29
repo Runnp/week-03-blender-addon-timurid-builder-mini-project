@@ -19,10 +19,7 @@ On change, the corresponding bpy.data.materials entry is updated live.
 """
 
 import bpy
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import PALETTE
+from .utils.material_utils import PALETTE
 
 
 # Default RGBA values (copied from material_utils.PALETTE)
