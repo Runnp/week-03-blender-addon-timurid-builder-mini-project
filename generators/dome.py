@@ -13,10 +13,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import assign_dome_material
+from ..utils.material_utils import assign_dome_material
 
 
 def generate_dome(p: dict) -> bpy.types.Object:

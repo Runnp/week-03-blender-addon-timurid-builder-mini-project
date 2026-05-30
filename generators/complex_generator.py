@@ -22,14 +22,14 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from generators.base_building import generate_base
-from generators.dome import generate_dome
-from generators.minaret import generate_minarets
-from generators.arch import generate_arches
-from generators.courtyard import generate_courtyard
-from generators.muqarnas import generate_muqarnas
-from utils.material_utils import assign_material
-from utils.tile_material import apply_tile_materials_to_collection
+from ..generators.base_building import generate_base
+from ..generators.dome import generate_dome
+from ..generators.minaret import generate_minarets
+from ..generators.arch import generate_arches
+from ..generators.courtyard import generate_courtyard
+from ..generators.muqarnas import generate_muqarnas
+from ..utils.material_utils import assign_material
+from ..utils.tile_material import apply_tile_materials_to_collection
 
 
 COMPLEX_COLLECTION = "Registan_Complex"
@@ -131,18 +131,39 @@ def _build_one(p: dict):
     ox = p.get("offset_x", 0.0)
     oy = p.get("offset_y", 0.0)
 
-    # Temporarily shift origin by injecting offset into every generator call.
-    # We do this by generating at origin then translating the resulting objects.
     objects_before = set(p["collection"].objects)
 
     generate_base(p)
     generate_dome(p)
     generate_minarets(p)
+
+    if p.get("balcony_enabled", False):
+        try:
+            from generators.balcony import generate_balconies
+            generate_balconies(p)
+        except Exception:
+            pass
+
     generate_arches(p)
     if p.get("muqarnas_enabled", False):
         generate_muqarnas(p)
 
-    # Translate all newly created objects
+    if p.get("iwan_enabled", False):
+        try:
+            from generators.iwan import generate_iwan
+            p["iwan_depth"] = p["arch_width"] * p.get("iwan_depth_factor", 1.8)
+            generate_iwan(p)
+        except Exception:
+            pass
+
+    if p.get("arcade_enabled", False):
+        try:
+            from generators.arcade import generate_arcade
+            p["arcade_height"] = p["height"] * p.get("arcade_height_factor", 0.68)
+            generate_arcade(p)
+        except Exception:
+            pass
+
     objects_after = set(p["collection"].objects)
     new_objects = objects_after - objects_before
     for obj in new_objects:
