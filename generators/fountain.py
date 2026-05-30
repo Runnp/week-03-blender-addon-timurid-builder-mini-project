@@ -18,10 +18,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import get_or_create_material, assign_material
+from ..utils.material_utils import get_or_create_material, assign_material
 
 
 # Colours
@@ -206,3 +203,4 @@ def _assign_colour(obj, mat_name, rgba):
         obj.data.materials[0] = mat
     else:
         obj.data.materials.append(mat)
+    

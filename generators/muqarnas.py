@@ -19,10 +19,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import get_or_create_material
+from ..utils.material_utils import get_or_create_material
 
 
 # Muqarnas cell colours — off-white stucco with slight warm tone

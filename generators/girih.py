@@ -25,10 +25,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import get_or_create_material
+from ..utils.material_utils import get_or_create_material
 
 
 GIRIH_COLOUR = (0.12, 0.42, 0.72, 1.0)   # classic Timurid blue

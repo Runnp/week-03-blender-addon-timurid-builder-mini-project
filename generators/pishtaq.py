@@ -21,10 +21,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import assign_wall_material, assign_material
+from ..utils.material_utils import assign_wall_material, assign_material
 
 
 def generate_pishtaq(p: dict) -> list:
