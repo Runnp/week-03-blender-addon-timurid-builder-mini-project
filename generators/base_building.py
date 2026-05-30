@@ -10,10 +10,7 @@ import bpy
 import bmesh
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import assign_wall_material
+from ..utils.material_utils import assign_wall_material
 
 
 def generate_base(p: dict) -> bpy.types.Object:

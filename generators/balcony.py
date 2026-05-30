@@ -20,10 +20,7 @@ import bmesh
 import math
 from mathutils import Vector
 
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from utils.material_utils import assign_material, get_or_create_material
+from ..utils.material_utils import assign_material, get_or_create_material
 
 BALCONY_COLOUR = (0.82, 0.76, 0.62, 1.0)   # warm sandstone
 
