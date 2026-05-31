@@ -1,3 +1,8 @@
+"""
+math_utils.py
+Pure-math helpers used across generators.
+"""
+
 import math
 from mathutils import Vector
 

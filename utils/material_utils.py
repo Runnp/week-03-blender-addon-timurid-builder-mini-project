@@ -1,5 +1,13 @@
+"""
+material_utils.py
+Helpers for creating and assigning basic Principled BSDF materials.
+Used in Phase 1 for colour-only materials; extended in Phase 2 for tiles.
+"""
+
 import bpy
 
+
+# Palette inspired by Timurid / Registan colour schemes
 PALETTE = {
     "terracotta": (0.72, 0.35, 0.18, 1.0),
     "azure_tile": (0.10, 0.35, 0.65, 1.0),
