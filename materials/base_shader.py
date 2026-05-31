@@ -1,1 +1,0 @@
-we should not mess up with shaders as some of them may include brick texture and we want the shaders to be semi realism that must look okay in a larger model
