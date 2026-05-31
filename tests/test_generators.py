@@ -1,4 +1,12 @@
 # tests/test_generators.py
+"""
+Headless geometry tests for the Registan generators.
+
+Run inside Blender's Python interpreter:
+    blender --background --python tests/test_generators.py
+
+Each test creates geometry, checks vertex/face counts, then clears the scene.
+"""
 
 import bpy
 import sys
@@ -14,6 +22,7 @@ from generators.dome import generate_dome
 from generators.minaret import generate_minarets
 from generators.arch import generate_arches
 from generators.courtyard import generate_courtyard
+
 
 def _make_collection(name="TestCol"):
     if name in bpy.data.collections:
@@ -75,7 +84,7 @@ def test_arches():
     col = _make_collection()
     p = {**BASE_PARAMS, "collection": col}
     generate_arches(p)
-    objs = [o for o in col.objects if "Arch" in o.name
+    objs = [o for o in col.objects if "Arch" in o.name]
     assert len(objs) == BASE_PARAMS["arch_count"], f"Expected {BASE_PARAMS['arch_count']} arches, got {len(objs)}"
     print("PASS test_arches")
 
