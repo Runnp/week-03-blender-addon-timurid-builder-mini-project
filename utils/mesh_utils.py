@@ -1,3 +1,8 @@
+"""
+mesh_utils.py
+Shared helpers for creating and linking Blender mesh objects.
+"""
+
 import bpy
 import bmesh
 from mathutils import Vector
