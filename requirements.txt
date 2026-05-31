@@ -1,0 +1,63 @@
+# =============================================================================
+# Registan Generator — Requirements
+# =============================================================================
+#
+# RUNTIME (inside Blender)
+# ------------------------
+# This addon uses ONLY Blender's bundled Python. No pip installs needed
+# inside Blender itself.
+#
+#   Blender  >= 3.6.0   https://www.blender.org/download/
+#   Python   >= 3.10    (bundled with Blender — do NOT install separately)
+#
+# Standard library modules used (all bundled with Python):
+#   bpy, bmesh, mathutils   — Blender Python API
+#   json, os, sys, re       — stdlib
+#   math, random, copy      — stdlib
+#   collections, argparse   — stdlib
+#   importlib               — stdlib
+#
+# =============================================================================
+# DEVELOPMENT (your IDE / venv — NOT inside Blender)
+# =============================================================================
+#
+# Install in your local venv for linting and testing:
+#
+#   python -m venv .venv
+#   .venv\Scripts\Activate.ps1          # Windows PowerShell
+#   pip install -r requirements.txt
+#
+# Run tests:
+#   python -m pytest tests/test_utils.py tests/test_snapshots.py \
+#                    tests/test_systems.py tests/test_integration.py -v
+
+# Blender API stub — lets VS Code / PyCharm resolve bpy imports
+# Match the version to your installed Blender
+fake-bpy-module-3.6
+
+# Testing
+pytest>=7.0
+
+# Linting (also used by GitHub Actions CI)
+flake8>=6.0
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# fake-bpy-module versions available:
+#   fake-bpy-module-3.3
+#   fake-bpy-module-3.6   <-- recommended (LTS, matches Blender 3.6)
+#   fake-bpy-module-4.0
+#   fake-bpy-module-4.1
+#   fake-bpy-module-latest
+#
+# Pick the version matching YOUR Blender install.
+# See: https://github.com/nutti/fake-bpy-module
+#
+# headless_render.py and test_generators.py require a real Blender binary:
+#   blender --background --python scripts/headless_render.py -- --preset Timurid
+#   blender --background --python tests/test_generators.py
+#
+# test_utils, test_snapshots, test_systems, test_integration
+# all run with plain pytest — no Blender binary needed.
