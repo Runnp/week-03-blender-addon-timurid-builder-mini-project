@@ -41,28 +41,3 @@ materials/       (Phase 2) texture/node group presets
 tests/           Headless test scripts for geometry validation
 ```
 
----
-
-## Sliders & Settings
-
-| Setting | Default | Description |
-|---|---|---|
-| Building Width | 6.0 m | Width of the main body |
-| Building Depth | 6.0 m | Depth of the main body |
-| Building Height | 4.0 m | Wall height |
-| Dome Size | 2.5 m | Hemisphere radius |
-| Dome Segments | 16 | Mesh resolution |
-| Minaret Count | 2 | 0–4 corner minarets |
-| Minaret Height | 7.0 m | Total minaret height |
-| Minaret Radius | 0.4 m | Shaft radius |
-| Arch Count | 1 | Openings on front face |
-| Arch Height | 3.0 m | Arch opening height |
-| Arch Width | 1.6 m | Arch opening width |
-| Courtyard | off | Add open courtyard |
-| Courtyard Size | 5.0 m | Courtyard depth |
-| Symmetry | on | Mirror elements across X |
-
----
-
-## Roadmap
-
