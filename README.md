@@ -19,25 +19,3 @@ One-click procedural generation of stylised Timurid buildings inside Blender:
 All elements are adjustable via a sidebar panel (`N` panel → **Registan** tab).
 
 ---
-
-## Installation
-
-1. Zip the `addon/` folder (or the whole repo root).
-2. In Blender: **Edit → Preferences → Add-ons → Install** → select the zip.
-3. Enable **"Registan Generator"** in the list.
-4. Open the sidebar in the 3D Viewport (`N`), go to the **Registan** tab.
-
-> Tested on Blender 3.6+. Python 3.10 (bundled with Blender) — no extra pip installs needed.
-
----
-
-## Project Structure
-
-```
-addon/           Blender addon registration, UI panel, operators, properties
-generators/      Procedural geometry builders (base, dome, minaret, arch, courtyard)
-utils/           Shared mesh, math, and material helpers
-materials/       (Phase 2) texture/node group presets
-tests/           Headless test scripts for geometry validation
-```
-
