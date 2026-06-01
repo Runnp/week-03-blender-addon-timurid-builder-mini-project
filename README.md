@@ -111,16 +111,3 @@ tests/           Headless test scripts for geometry validation
 - [ ] Blender geometry nodes re-implementation
 
 ---
-
-## Inspiration
-
-- Registan, Samarkand
-- Shah-i-Zinda necropolis
-- Kalon Minaret, Bukhara
-- Timurid architectural principles
-
----
-
-## License
-
-MIT — see `LICENSE`.
