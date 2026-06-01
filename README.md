@@ -121,8 +121,8 @@ blender --background --python tests/test_generators.py
 
 | Section | Key Sliders | Sub-toggles |
 |---|---|---|
-| Building Base | Width, Depth, Height | — |
-| Dome | Size, Segments | — |
+| Building Base | Width, Depth, Height | Dimensions |
+| Dome | Size, Segments | Facet |
 | Minarets | Count, Height, Radius, Segments | Serefe Balcony |
 | Arch Entrance | Count, Height, Width | Muqarnas Vault, Pishtaq Portal, Iwan Hall |
 | Courtyard | Size | Hauz Fountain |
