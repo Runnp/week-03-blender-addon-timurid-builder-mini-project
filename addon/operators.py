@@ -1,3 +1,18 @@
+"""
+operators.py
+
+Defines the Blender operators for the Registan Generator addon. 
+These operators handle user interactions like generating the building, 
+applying presets, and randomizing settings. Each operator is a class that 
+inherits from bpy.types.Operator and implements an execute() method.
+
+Operators are registered with unique bl_idname values, which are used to call 
+them from the UI panels and other parts of the addon.
+
+
+"""
+
+
 import bpy
 from .generators.base_building import generate_base
 from .generators.dome import generate_dome
