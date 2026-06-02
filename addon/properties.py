@@ -1,3 +1,13 @@
+"""
+properties.py
+
+Defines the RegistanProperties class which holds all user-configurable settings for the generator. 
+This includes architectural parameters, preset selection, randomization settings, and UI language. 
+The properties are registered as a Blender PropertyGroup and attached to the Scene for easy access 
+throughout the addon.
+
+"""
+
 import bpy
 
 from .presets import PRESET_NAMES
