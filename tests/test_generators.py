@@ -1,5 +1,6 @@
-# tests/test_generators.py
 """
+ tests/test_generators.py
+
 Headless geometry tests for the Registan generators.
 
 Run inside Blender's Python interpreter:

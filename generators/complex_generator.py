@@ -7,7 +7,7 @@ Generates a full Registan-style madrasa complex:
 
 Layout (top-down, Y+ = north):
   ┌──────────────────────────────┐
-  │         [NORTH BUILDING]     │  ← Tilya-Kori style (wider, flatter dome)
+  │       [NORTH BUILDING]       │  ← Tilya-Kori style (wider, flatter dome)
   │                              │
   │  [WEST]    [PLAZA]   [EAST]  │  ← Ulugh Beg / Sher-Dor style (tall minarets)
   │                              │
