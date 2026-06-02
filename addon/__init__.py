@@ -1,3 +1,12 @@
+"""
+__init__.py
+
+Main entry point for the Registan Generator addon. 
+Defines bl_info and registers all submodules.
+
+"""
+
+
 bl_info = {
     "name": "Registan Generator",
     "author": "Runnp",
