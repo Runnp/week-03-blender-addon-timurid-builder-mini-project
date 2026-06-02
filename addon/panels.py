@@ -1,3 +1,14 @@
+"""
+panels.py
+
+Defines the Blender UI panels for the Registan Generator addon. 
+The main panel is located in the 3D View sidebar under the "Registan" tab, 
+and it provides access to all user-configurable settings, presets, randomization controls,
+and actions like generating the building or exporting assets.
+
+"""
+
+
 import bpy
 
 
