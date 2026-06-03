@@ -340,10 +340,10 @@ snapshots, animation, weathering, SVG export, i18n, CI, 87 tests.
 
 ## License
 
-MIT — see `LICENSE`. Use it, learn from it, build on it.
+MIT — see `LICENSE`.
 
 ---
 
 <div align="center">
-<em>Built in Tashkent. Inspired by Samarkand.</em>
+<em>Developed by Runnp. Built in Tashkent, Uzbekistan. Inspired by Samarkand.</em>
 </div>
