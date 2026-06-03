@@ -214,3 +214,70 @@ def _report_animation():
         print("  (no animated objects)")
     print()
 
+
+def _report_modifiers():
+    print(_sep("═"))
+    print("  MODIFIERS (Registan)")
+    print(_sep("═"))
+    mod_summary: dict[str, int] = {}
+    for col_name in COLLECTION_NAMES:
+        for obj in _all_objects(col_name):
+            for mod in obj.modifiers:
+                mod_summary[mod.type] = mod_summary.get(mod.type, 0) + 1
+    if not mod_summary:
+        print("  (no modifiers)")
+    else:
+        for mtype, count in sorted(mod_summary.items()):
+            print(f"  {mtype:<25} × {count}")
+    print()
+
+
+def _report_config():
+    print(_sep("═"))
+    print("  CONFIG.JSON")
+    print(_sep("═"))
+    try:
+        from utils.config import load_config, CONFIG_PATH
+        cfg = load_config(force=True)
+        print(f"  Path: {CONFIG_PATH}")
+        if cfg:
+            for k, v in sorted(cfg.items()):
+                if k.startswith("_"):
+                    continue
+                print(f"  {k:<30} = {v}")
+        else:
+            print("  (config.json not found or empty)")
+    except Exception as e:
+        print(f"  (config load error: {e})")
+    print()
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    print()
+    print("╔" + "═" * 58 + "╗")
+    print("║" + "  REGISTAN GENERATOR — PROJECT STATISTICS REPORT".center(58) + "║")
+    print("╚" + "═" * 58 + "╝")
+    print()
+    print(f"  Blender  : {bpy.app.version_string}")
+    print(f"  File     : {bpy.data.filepath or '(unsaved)'}")
+    print()
+
+    _report_geometry()
+    _report_materials()
+    _report_snapshots()
+    _report_animation()
+    _report_modifiers()
+    _report_config()
+
+    print(_sep("═"))
+    print("  END OF REPORT")
+    print(_sep("═"))
+    print()
+
+
+if __name__ == "__main__":
+    main()
